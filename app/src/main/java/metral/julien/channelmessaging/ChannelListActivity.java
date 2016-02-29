@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class ChannelListActivity extends Activity {
     private User user;
     private ChannelList channels;
     private ListView channelListView;
+    private Button myFriendsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,16 @@ public class ChannelListActivity extends Activity {
         nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
         MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_CHANNELS,nameValuePairs);
         task.execute();
+
+        myFriendsButton = (Button) findViewById(R.id.myFriends);
+        myFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChannelListActivity.this, FriendsActivity.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
+            }
+        });
 
         task.setOnNewWsRequestListener(new onWsRequestListener() {
             @Override

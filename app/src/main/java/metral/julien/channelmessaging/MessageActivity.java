@@ -1,6 +1,7 @@
 package metral.julien.channelmessaging;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -37,6 +38,9 @@ public class MessageActivity extends Activity implements onWsRequestListener {
     private EditText editMessage;
     private Handler handler;
     private Runnable r;
+    private Button myFriendsButton;
+    private boolean firstLaunch;
+    private MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
             user = (User) getIntent().getSerializableExtra("User");
         }
 
+        firstLaunch = true;
         handler = new Handler();
 
         r = new Runnable() {
@@ -116,6 +121,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
     public void onCompleted(String json) {
             Gson gson = new Gson();
             Log.wtf("JsonMessages", json.toString());
+
             try{
                 messages = gson.fromJson(json,MessageList.class);
             }catch (Exception e){
@@ -128,8 +134,10 @@ public class MessageActivity extends Activity implements onWsRequestListener {
 
             channelName.setText(channel.getName());
 
-            final MessageAdapter adapter = new MessageAdapter(messages.getMessages(),MessageActivity.this);
-            messageListView.setAdapter(adapter);
+            messageAdapter = new MessageAdapter(messages.getMessages(),MessageActivity.this);
+            messageListView.setAdapter(messageAdapter);
+
+            messageListView.setSelection(messageAdapter.getCount() - 1);
 
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override

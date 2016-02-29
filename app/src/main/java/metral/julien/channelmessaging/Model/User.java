@@ -10,6 +10,8 @@ public class User implements Serializable {
     private String identifiant;
     private String password;
     private String token;
+    private String username;
+    private String imageUrl;
 
     public User(String identifiant, String password, String token) {
         this.identifiant = identifiant;
@@ -28,7 +30,13 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return token;
+        return "User{" +
+                "identifiant='" + identifiant + '\'' +
+                ", password='" + password + '\'' +
+                ", token='" + token + '\'' +
+                ", username='" + username + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 
     public String getIdentifiant() {
@@ -53,5 +61,13 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

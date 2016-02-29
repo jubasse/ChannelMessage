@@ -1,23 +1,31 @@
 package metral.julien.channelmessaging.Adapter;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
-import metral.julien.channelmessaging.Model.Channel;
+import metral.julien.channelmessaging.DownloadImageTask;
 import metral.julien.channelmessaging.Model.Message;
 import metral.julien.channelmessaging.R;
+import metral.julien.channelmessaging.utils.ImageRounder;
 
 /**
  * Created by Julien on 08/02/2016.
  */
-public class MessageAdapter extends BaseAdapter{
+public class MessageAdapter extends BaseAdapter {
     private List<Message> list;
 
     private Context context;
@@ -57,12 +65,41 @@ public class MessageAdapter extends BaseAdapter{
         TextView message = (TextView) view.findViewById(R.id.message);
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView username = (TextView) view.findViewById(R.id.username);
+        ImageView messageImage = (ImageView) view.findViewById(R.id.messageImage);
 
         message.setText(list.get(position).getMessage());
         date.setText(list.get(position).getDate());
         username.setText(list.get(position).getUsername());
 
+        String fileName = list.get(position).getUserID().toString();
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("ChannelMessaging", Context.MODE_PRIVATE);
+
+        Bitmap profilePhoto = loadImageFromStorage(directory.getPath(), fileName);
+        if( profilePhoto != null) {
+            Bitmap rounded = ImageRounder.getRoundedCornerBitmap(profilePhoto,50);
+            messageImage.setImageBitmap(rounded);
+        } else {
+            new DownloadImageTask(
+                    list.get(position).getUserID().toString(),
+                    list.get(position).getImageUrl(),
+                    messageImage,
+                    this.context
+            ).execute();
+        }
         return view;
+    }
+
+    private Bitmap loadImageFromStorage(String path, String fileName)
+    {
+        File f = new File(path, fileName+".png");
+        Bitmap b = null;
+        try {
+            b = BitmapFactory.decodeStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     public void removeAll() {

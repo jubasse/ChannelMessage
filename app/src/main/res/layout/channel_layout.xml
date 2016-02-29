@@ -11,11 +11,17 @@
         android:gravity="left"
         android:text="sample"
         android:layout_margin="4dip"
-        android:layout_width="fill_parent"
+        android:layout_width="130dp"
         android:paddingBottom="10dip"
         android:paddingLeft="10dip"
         android:paddingTop="5dip"
         android:layout_height="wrap_content"
         android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/nbrConnected" />
 
 </LinearLayout>

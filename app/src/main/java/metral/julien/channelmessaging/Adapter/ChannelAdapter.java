@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import metral.julien.channelmessaging.Model.Channel;
@@ -53,7 +55,9 @@ public class ChannelAdapter extends BaseAdapter {
         View view = inflater.inflate(R.layout.channel_layout,parent,false);
 
         TextView name = (TextView) view.findViewById(R.id.name);
+        TextView nbreConnected = (TextView) view.findViewById(R.id.nbrConnected);
         name.setText(list.get(position).getName());
+        nbreConnected.setText("Nombre de connectés : "+ list.get(position).getConnectedUsers());
 
         return view;
     }
