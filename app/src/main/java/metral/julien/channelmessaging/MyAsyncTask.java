@@ -38,6 +38,12 @@ public class MyAsyncTask extends AsyncTask<String, Integer, String> {
         if(url == ApiManager.BASE_URL_SEND_MESSAGES){
             return apiManager.sendMessage(nameValuePairs);
         }
+        if(url == ApiManager.BASE_URL_GET_MESSAGES_FROM_FRIENDS){
+            return apiManager.messagesFromFriend(nameValuePairs);
+        }
+        if(url == ApiManager.BASE_URL_SEND_MESSAGES_TO_FRIENDS){
+            return apiManager.sendMessageToFriend(nameValuePairs);
+        }
         return null;
     }
 

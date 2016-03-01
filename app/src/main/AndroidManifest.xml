@@ -28,6 +28,10 @@
         <activity
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PrivateMessagesActivity"
+            android:label="@string/title_activity_private_messages"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

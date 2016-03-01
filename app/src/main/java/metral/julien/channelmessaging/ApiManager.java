@@ -25,6 +25,8 @@ public class ApiManager {
     public static String BASE_URL_GET_CHANNELS = BASE_URL_API+"?function=getchannels";
     public static String BASE_URL_GET_MESSAGES = BASE_URL_API+"?function=getmessages";
     public static String BASE_URL_SEND_MESSAGES = BASE_URL_API+"?function=sendmessage";
+    public static String BASE_URL_GET_MESSAGES_FROM_FRIENDS = BASE_URL_API+"?function=getmessages";
+    public static String BASE_URL_SEND_MESSAGES_TO_FRIENDS = BASE_URL_API+"?function=sendmessage";
 
     public String connect(List<NameValuePair> nameValuePairs)
     {
@@ -49,11 +51,25 @@ public class ApiManager {
         return sendRequest(nameValuePairs, httpclient, httppost);
     }
 
+    public String messagesFromFriend(List<NameValuePair> nameValuePairs)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(BASE_URL_GET_MESSAGES_FROM_FRIENDS);
+        return sendRequest(nameValuePairs, httpclient, httppost);
+    }
+
     public String sendMessage(List<NameValuePair> nameValuePairs)
     {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(BASE_URL_SEND_MESSAGES);
+        return sendRequest(nameValuePairs, httpclient, httppost);
+    }
+
+    public String sendMessageToFriend(List<NameValuePair> nameValuePairs)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(BASE_URL_SEND_MESSAGES_TO_FRIENDS);
         return sendRequest(nameValuePairs, httpclient, httppost);
     }
 

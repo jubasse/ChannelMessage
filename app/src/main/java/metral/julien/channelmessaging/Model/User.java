@@ -39,6 +39,14 @@ public class User implements Serializable {
                 '}';
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public String getIdentifiant() {
         return identifiant;
     }

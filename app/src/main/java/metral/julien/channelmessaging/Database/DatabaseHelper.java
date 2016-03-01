@@ -3,12 +3,13 @@ package metral.julien.channelmessaging.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "channelMessaging.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static Context context;
 
     private static DatabaseHelper dbHelper = null;
@@ -34,11 +35,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        Log.wtf("DatabaseHelper","Upgrade database from "+oldVersion+" to "+newVersion);
         FriendsDB.onUpgrade(database, oldVersion, newVersion);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        Log.wtf("DatabaseHelper","Upgrade database from "+oldVersion+" to "+newVersion);
         super.onDowngrade(database, oldVersion, newVersion);
         FriendsDB.onUpgrade(database, oldVersion, newVersion);
     }

@@ -21,7 +21,7 @@ public class MessageList implements Serializable{
         return messages;
     }
 
-    public void setgetMessages(List<Message> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 }

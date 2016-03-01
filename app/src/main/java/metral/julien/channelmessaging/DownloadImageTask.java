@@ -42,7 +42,9 @@ public class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
             connection.connect();
             InputStream input = connection.getInputStream();
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            saveToInternalStorage(myBitmap, this.fileName);
+            if(myBitmap != null){
+                saveToInternalStorage(myBitmap, this.fileName);
+            }
             return myBitmap;
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +77,9 @@ public class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap result) {
-        Bitmap rounded = ImageRounder.getRoundedCornerBitmap(result,50);
-                imageView.setImageBitmap(rounded);
+        if(result != null){
+            Bitmap rounded = ImageRounder.getRoundedCornerBitmap(result,50);
+            imageView.setImageBitmap(rounded);
+        }
     }
 }

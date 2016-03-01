@@ -1,11 +1,14 @@
 package metral.julien.channelmessaging;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,8 +23,12 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.datatype.Duration;
+
 import metral.julien.channelmessaging.Adapter.MessageAdapter;
+import metral.julien.channelmessaging.Database.FriendsDB;
 import metral.julien.channelmessaging.Model.Channel;
+import metral.julien.channelmessaging.Model.Message;
 import metral.julien.channelmessaging.Model.MessageList;
 import metral.julien.channelmessaging.Model.Response;
 import metral.julien.channelmessaging.Model.User;
@@ -58,7 +65,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
         r = new Runnable() {
             public void run() {
                 loadDatas();
-                handler.postDelayed(this, 2000);
+                handler.postDelayed(this, 3000);
             }
         };
 
@@ -73,7 +80,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
     }
 
     private void loadDatas() {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(1);
         nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
         nameValuePairs.add(new BasicNameValuePair("channelid", channel.getChannelID().toString()));
         MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES,nameValuePairs);
@@ -87,7 +94,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
 
         final String messageText = editMessage.getText().toString();
         editMessage.setText("");
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(3);
 
         nameValuePairs.add(new BasicNameValuePair("message", messageText));
         nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
@@ -136,6 +143,37 @@ public class MessageActivity extends Activity implements onWsRequestListener {
 
             messageAdapter = new MessageAdapter(messages.getMessages(),MessageActivity.this);
             messageListView.setAdapter(messageAdapter);
+
+            messageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Message message = messageAdapter.getItem(position);
+                    final User friend = new User();
+                    friend.setIdentifiant(message.getUserID().toString());
+                    friend.setUsername(message.getUsername());
+                    friend.setImageUrl(message.getImageUrl());
+                    new AlertDialog.Builder(MessageActivity.this)
+                            .setTitle("Ajouter un ami")
+                            .setMessage("Voulez vous vraiment ajouter cet utilisateur à vos amis ?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(FriendsDB.addFriend(friend,MessageActivity.this)){
+                                        Toast.makeText(MessageActivity.this,"Amis ajouté", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(MessageActivity.this,"L'ajout à échoué", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_dialer)
+                            .show();
+                }
+            });
 
             messageListView.setSelection(messageAdapter.getCount() - 1);
 

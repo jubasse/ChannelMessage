@@ -14,36 +14,34 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 
 import metral.julien.channelmessaging.DownloadImageTask;
-import metral.julien.channelmessaging.Model.Message;
+import metral.julien.channelmessaging.Model.User;
 import metral.julien.channelmessaging.R;
 import metral.julien.channelmessaging.utils.ImageRounder;
 
 /**
- * Created by Julien on 08/02/2016.
+ * Created by Julien on 01/03/2016.
  */
-public class MessageAdapter extends BaseAdapter {
-    private List<Message> list;
+public class FriendAdapter extends BaseAdapter {
 
+    private ArrayList<User> friendList;
     private Context context;
 
-    public MessageAdapter(List<Message> list, Context context) {
-        Collections.reverse(list);
-        this.list = list;
+    public FriendAdapter(ArrayList<User> friendList,Context context)
+    {
         this.context = context;
+        this.friendList = friendList;
     }
-
     @Override
     public int getCount() {
-        return list.size();
+        return friendList.size();
     }
 
     @Override
-    public Message getItem(int position) {
-        return list.get(position);
+    public User getItem(int position) {
+        return friendList.get(position);
     }
 
     @Override
@@ -51,45 +49,40 @@ public class MessageAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void addItem(Message message)
+    public void addItem(User friend)
     {
-        list.add(message);
+        friendList.add(friend);
         notifyDataSetChanged();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.message_layout,parent,false);
+        View view = inflater.inflate(R.layout.friend_layout,parent,false);
 
-        TextView message = (TextView) view.findViewById(R.id.message);
-        TextView date = (TextView) view.findViewById(R.id.date);
-        TextView username = (TextView) view.findViewById(R.id.username);
-        ImageView messageImage = (ImageView) view.findViewById(R.id.messageImage);
+        ImageView friendImage = (ImageView) view.findViewById(R.id.friendImageView);
+        TextView username = (TextView) view.findViewById(R.id.friendUsername);
+        username.setText(friendList.get(position).getUsername());
 
-        message.setText(list.get(position).getMessage());
-        date.setText(list.get(position).getDate());
-        username.setText(list.get(position).getUsername());
 
-        if(list.get(position).getImageUrl() != null){
-            String fileName = list.get(position).getUserID().toString();
+        if(friendList.get(position).getImageUrl() != null){
+            String fileName = friendList.get(position).getIdentifiant().toString();
             ContextWrapper cw = new ContextWrapper(context);
             File directory = cw.getDir("ChannelMessaging", Context.MODE_PRIVATE);
 
             Bitmap profilePhoto = loadImageFromStorage(directory.getPath(), fileName);
             if( profilePhoto != null) {
-                Bitmap rounded = ImageRounder.getRoundedCornerBitmap(profilePhoto,50);
-                messageImage.setImageBitmap(rounded);
+                Bitmap rounded = ImageRounder.getRoundedCornerBitmap(profilePhoto, 50);
+                friendImage.setImageBitmap(rounded);
             } else {
                 new DownloadImageTask(
-                        list.get(position).getUserID().toString(),
-                        list.get(position).getImageUrl(),
-                        messageImage,
+                        friendList.get(position).getIdentifiant().toString(),
+                        friendList.get(position).getImageUrl(),
+                        friendImage,
                         this.context
                 ).execute();
             }
         }
-
 
         return view;
     }
@@ -104,10 +97,5 @@ public class MessageAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         return b;
-    }
-
-    public void removeAll() {
-        list.clear();
-        notifyDataSetChanged();
     }
 }
