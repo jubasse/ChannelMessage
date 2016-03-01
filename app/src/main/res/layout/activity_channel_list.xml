@@ -7,20 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="metral.julien.channelmessaging.ChannelListActivity">
+    tools:context="metral.julien.channelmessaging.ChannelListFragmentActivity">
 
-    <Button
+    <fragment
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mes Amis"
-        android:id="@+id/myFriends"
-        android:gravity="center_vertical|center_horizontal"
-        android:elegantTextHeight="true" />
+        android:layout_height="match_parent"
+        android:name="metral.julien.channelmessaging.Fragment.ChannelListFragment"
+        android:id="@+id/fragment_channel_list"
+        tools:layout="@layout/fragment_channel_list">
+    </fragment>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/channelListView"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/myFriends" />
 </RelativeLayout>

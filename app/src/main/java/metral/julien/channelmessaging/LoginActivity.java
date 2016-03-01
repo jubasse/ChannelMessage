@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        sharedPref.edit().putString("accessToken",res.getAccessToken()).apply();
                         user.setToken(res.getAccessToken());
                         Toast.makeText(getApplicationContext(), res.getAccessToken(), Toast.LENGTH_LONG);
-                        Intent intent = new Intent(LoginActivity.this,ChannelListActivity.class);
+                        Intent intent = new Intent(LoginActivity.this,ChannelListFragmentActivity.class);
                         intent.putExtra("User",user);
                         startActivity(intent);
                     }
