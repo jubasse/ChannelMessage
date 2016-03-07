@@ -22,6 +22,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import metral.julien.channelmessaging.Model.Response;
@@ -67,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         buttonValid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
                 String username = identifiant.getText().toString();
                 String pass = password.getText().toString();
@@ -75,9 +75,12 @@ public class LoginActivity extends AppCompatActivity {
                 user.setIdentifiant(username);
                 user.setPassword(pass);
 
-                nameValuePairs.add(new BasicNameValuePair("username", username));
-                nameValuePairs.add(new BasicNameValuePair("password", pass));
-                MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_CONNECT,nameValuePairs);
+                HashMap<String, String> postDatas = new HashMap<>(2);
+
+                postDatas.put("username", username);
+                postDatas.put("password", pass);
+
+                MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_CONNECT,postDatas);
                 task.execute();
 
                 task.setOnNewWsRequestListener(new onWsRequestListener() {

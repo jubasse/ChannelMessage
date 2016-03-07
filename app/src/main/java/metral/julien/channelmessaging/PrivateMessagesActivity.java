@@ -18,6 +18,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import metral.julien.channelmessaging.Adapter.PrivateMessageAdapter;
@@ -40,19 +41,19 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_messages);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         privateMessage = (EditText) findViewById(R.id.privateMessageField);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<NameValuePair> nameValuePairs = new ArrayList<>(1);
-                nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
-                nameValuePairs.add(new BasicNameValuePair("userid", friend.getIdentifiant().toString()));
-                nameValuePairs.add(new BasicNameValuePair("message", privateMessage.getText().toString()));
-                MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_SEND_MESSAGES_TO_FRIENDS,nameValuePairs);
+                HashMap<String, String> postDatas = new HashMap<>(2);
+                postDatas.put("accesstoken", user.getToken());
+                postDatas.put("userid", friend.getIdentifiant().toString());
+                postDatas.put("message", privateMessage.getText().toString());
+                MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_SEND_MESSAGES_TO_FRIENDS,postDatas);
                 task.setOnNewWsRequestListener(new onWsRequestListener() {
                     @Override
                     public void onCompleted(String response) {
@@ -88,10 +89,10 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
     }
 
     private void loadDatas() {
-        List<NameValuePair> nameValuePairs = new ArrayList<>(1);
-        nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
-        nameValuePairs.add(new BasicNameValuePair("userid", friend.getIdentifiant().toString()));
-        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES_FROM_FRIENDS,nameValuePairs);
+        HashMap<String, String> postDatas = new HashMap<>(1);
+        postDatas.put("accesstoken", user.getToken());
+        postDatas.put("userid", friend.getIdentifiant().toString());
+        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES_FROM_FRIENDS,postDatas);
 
         task.setOnNewWsRequestListener(this);
 

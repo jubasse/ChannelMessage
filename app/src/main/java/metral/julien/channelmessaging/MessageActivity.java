@@ -1,9 +1,7 @@
 package metral.julien.channelmessaging;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,13 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.datatype.Duration;
+import java.util.HashMap;
 
 import metral.julien.channelmessaging.Adapter.MessageAdapter;
 import metral.julien.channelmessaging.Database.FriendsDB;
@@ -33,7 +25,7 @@ import metral.julien.channelmessaging.Model.MessageList;
 import metral.julien.channelmessaging.Model.Response;
 import metral.julien.channelmessaging.Model.User;
 
-public class MessageActivity extends Activity implements onWsRequestListener {
+public class MessageActivity extends GPSActivity implements onWsRequestListener {
 
     private Response res;
     private MessageList messages;
@@ -69,7 +61,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
             }
         };
 
-        handler.postDelayed(r,0);
+        handler.postDelayed(r, 0);
 
     }
 
@@ -80,10 +72,10 @@ public class MessageActivity extends Activity implements onWsRequestListener {
     }
 
     private void loadDatas() {
-        List<NameValuePair> nameValuePairs = new ArrayList<>(1);
-        nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
-        nameValuePairs.add(new BasicNameValuePair("channelid", channel.getChannelID().toString()));
-        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES,nameValuePairs);
+        HashMap<String, String> postDatas = new HashMap<>(1);
+        postDatas.put("accesstoken", user.getToken());
+        postDatas.put("channelid", channel.getChannelID().toString());
+        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES,postDatas);
 
         task.setOnNewWsRequestListener(this);
 
@@ -94,13 +86,15 @@ public class MessageActivity extends Activity implements onWsRequestListener {
 
         final String messageText = editMessage.getText().toString();
         editMessage.setText("");
-        List<NameValuePair> nameValuePairs = new ArrayList<>(3);
 
-        nameValuePairs.add(new BasicNameValuePair("message", messageText));
-        nameValuePairs.add(new BasicNameValuePair("accesstoken", user.getToken()));
-        nameValuePairs.add(new BasicNameValuePair("channelid", channel.getChannelID().toString()));
+        HashMap<String, String> postDatas = new HashMap<>(4);
+        postDatas.put("message", messageText);
+        postDatas.put("accesstoken", user.getToken());
+        postDatas.put("channelid", channel.getChannelID().toString());
+        postDatas.put("latitude", String.valueOf(this.mCurrentLocation.getLatitude()));
+        postDatas.put("longitude",String.valueOf(this.mCurrentLocation.getLongitude()));
 
-        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_SEND_MESSAGES,nameValuePairs);
+        MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_SEND_MESSAGES,postDatas);
         task.execute();
 
         task.setOnNewWsRequestListener(new onWsRequestListener() {
@@ -112,7 +106,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
                     loadDatas();
                 }
                 if (res.getCode() == 500) {
-                    Toast.makeText(MessageActivity.this, "Cannot send message", Toast.LENGTH_LONG);
+                    Toast.makeText(MessageActivity.this, "Cannot send message", Toast.LENGTH_LONG).show();
                     editMessage.setText(messageText);
                 }
             }
@@ -127,7 +121,7 @@ public class MessageActivity extends Activity implements onWsRequestListener {
     @Override
     public void onCompleted(String json) {
             Gson gson = new Gson();
-            Log.wtf("JsonMessages", json.toString());
+            Log.wtf("JsonMessages", json);
 
             try{
                 messages = gson.fromJson(json,MessageList.class);

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="metral.julien.channelmessaging.ChannelListFragmentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="12"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+
+        <fragment
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="metral.julien.channelmessaging.Fragment.ChannelListFragment"
+            android:id="@+id/fragment_channel_list"
+            tools:layout="@layout/fragment_channel_list"
+            android:layout_weight="5"
+            >
+        </fragment>
+
+        <fragment
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:name="metral.julien.channelmessaging.Fragment.MessageFragment"
+            android:id="@+id/fragment_message"
+            tools:layout="@layout/fragment_message"
+            android:layout_weight="7">
+        </fragment>
+
+    </LinearLayout>
+
+</RelativeLayout>

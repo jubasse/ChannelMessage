@@ -3,6 +3,8 @@
     package="metral.julien.channelmessaging">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"
+            android:label="@string/login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,17 +25,27 @@
         <activity
             android:name=".ChannelListActivity"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name" />
-        <activity android:name=".MessageActivity" />
-        <activity android:name=".ChannelListFragmentActivity" />
+            android:label="@string/channels"
+            android:parentActivityName=".LoginActivity" />
+        <activity
+            android:name=".MessageActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/messageChannel"
+            android:parentActivityName=".ChannelListActivity" />
+        <activity
+            android:name=".ChannelListFragmentActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/channels"
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".FriendsActivity"
-            android:label="@string/title_activity_friends"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/friends"
+            android:parentActivityName=".ChannelListActivity" />
         <activity
             android:name=".PrivateMessagesActivity"
             android:label="@string/title_activity_private_messages"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".FriendsActivity" />
+        <activity android:name=".GPSActivity"></activity>
     </application>
 
 </manifest>

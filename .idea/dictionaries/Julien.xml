@@ -1,7 +1,14 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Julien">
     <words>
+      <w>accesstoken</w>
+      <w>channelid</w>
+      <w>datas</w>
+      <w>getchannels</w>
+      <w>getmessages</w>
       <w>sendbyme</w>
+      <w>sendmessage</w>
+      <w>userid</w>
     </words>
   </dictionary>
 </component>

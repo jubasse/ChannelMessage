@@ -3,8 +3,13 @@
     <string name="action_settings">Settings</string>
     <string name="send">Envoyer</string>
     <string name="title_activity_friends">FriendsActivity</string>
-    <string name="title_activity_private_messages">PrivateMessagesActivity</string>
+    <string name="title_activity_private_messages">Messages Privés</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_search">Rechercher</string>
+    <string name="login">Connection</string>
+    <string name="channels">Les channels</string>
+    <string name="friends">Mes amis</string>
+    <string name="messageChannel">Message du channel</string>
 </resources>

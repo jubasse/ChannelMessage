@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import metral.julien.channelmessaging.Model.Channel;
@@ -20,11 +21,13 @@ import metral.julien.channelmessaging.R;
 public class ChannelAdapter extends BaseAdapter {
 
     private List<Channel> list;
+    private List<Channel> original;
 
     private Context context;
 
     public ChannelAdapter(List<Channel> list, Context context) {
         this.list = list;
+        this.original = list;
         this.context = context;
     }
 
@@ -46,6 +49,18 @@ public class ChannelAdapter extends BaseAdapter {
     public void addItem(Channel channel)
     {
         list.add(channel);
+        notifyDataSetChanged();
+    }
+
+    public void setSearchResult(String searched)
+    {
+        List<Channel> newList = new ArrayList<>();
+        for (Channel channel:original) {
+            if(channel.getName().toString().contains(searched)){
+                newList.add(channel);
+            }
+        }
+        this.list = newList;
         notifyDataSetChanged();
     }
 
