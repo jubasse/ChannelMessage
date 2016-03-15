@@ -1,17 +1,21 @@
 package metral.julien.channelmessaging.Activity.Message;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,29 +32,28 @@ import com.victor.loading.book.BookLoading;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import metral.julien.channelmessaging.Activity.LoginActivity;
 import metral.julien.channelmessaging.Activity.Map.GPSActivity;
 import metral.julien.channelmessaging.Activity.Map.MapActivity;
 import metral.julien.channelmessaging.Adapter.MessageAdapter;
-import metral.julien.channelmessaging.Fragment.AddToFriendsDialogFragment;
-import metral.julien.channelmessaging.Utils.ApiManager;
 import metral.julien.channelmessaging.Database.FriendsDB;
+import metral.julien.channelmessaging.Fragment.AddToFriendsDialogFragment;
 import metral.julien.channelmessaging.Model.Channel;
 import metral.julien.channelmessaging.Model.Message;
 import metral.julien.channelmessaging.Model.MessageList;
 import metral.julien.channelmessaging.Model.Response;
 import metral.julien.channelmessaging.Model.User;
 import metral.julien.channelmessaging.R;
+import metral.julien.channelmessaging.Utils.ApiManager;
 import metral.julien.channelmessaging.Utils.ImageRounder;
 import metral.julien.channelmessaging.Utils.MyAsyncTask;
 import metral.julien.channelmessaging.Utils.UploadFileToServer;
@@ -78,7 +81,11 @@ public class MessageActivity extends GPSActivity implements onWsRequestListener 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            loadDatas();
+            abortBroadcast();
+            String channelid = intent.getExtras().getString("channelid");
+            if(channelid.equals(channel.getChannelID())){
+                loadDatas();
+            }
         }
     };
 
@@ -111,7 +118,8 @@ public class MessageActivity extends GPSActivity implements onWsRequestListener 
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
-        registerReceiver(mMessageReceiver,intentFilter);
+        intentFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(mMessageReceiver, intentFilter);
     }
 
     private void loadDatas() {
@@ -329,6 +337,6 @@ public class MessageActivity extends GPSActivity implements onWsRequestListener 
     @Override
     protected void onPause() {
         super.onPause();
-
+        unregisterReceiver(mMessageReceiver);
     }
 }

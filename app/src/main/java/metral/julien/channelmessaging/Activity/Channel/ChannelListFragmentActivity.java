@@ -20,6 +20,7 @@ import metral.julien.channelmessaging.R;
 public class ChannelListFragmentActivity extends GPSActivity {
 
     private User user;
+    private Channel channel;
     private ChannelListFragment channelListFragment;
     private MessageFragment messageFragment;
 
@@ -29,6 +30,13 @@ public class ChannelListFragmentActivity extends GPSActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             user = (User) getIntent().getSerializableExtra("User");
+            if(getIntent().getAction() == "redirectToChannel"){
+                channel = (Channel) getIntent().getSerializableExtra("Channel");
+                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                intent.putExtra("Channel", channel);
+                intent.putExtra("User", user);
+                startActivity(intent);
+            }
             channelListFragment = (ChannelListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_channel_list);
             channelListFragment.setUser(user);
         }
@@ -38,7 +46,7 @@ public class ChannelListFragmentActivity extends GPSActivity {
     public AdapterView.OnItemClickListener OnItemChannelClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Channel channel = channelListFragment.getAdapter().getItem(position);
+            channel = channelListFragment.getAdapter().getItem(position);
             if(messageFragment != null && messageFragment.isInLayout()){
                 messageFragment.setUserAndChannel(user,channel);
             } else {

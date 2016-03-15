@@ -1,16 +1,13 @@
 package metral.julien.channelmessaging.Fragment;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,10 +28,7 @@ import com.victor.loading.book.BookLoading;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,11 +52,7 @@ import metral.julien.channelmessaging.Utils.MyAsyncTask;
 import metral.julien.channelmessaging.Utils.UploadFileToServer;
 import metral.julien.channelmessaging.Utils.onWsRequestListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MessageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class MessageFragment extends Fragment implements onWsRequestListener {
 
     private User user;
@@ -85,7 +75,11 @@ public class MessageFragment extends Fragment implements onWsRequestListener {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            loadDatas();
+            abortBroadcast();
+            String channelid = intent.getExtras().getString("channelid");
+            if(channelid.equals(channel.getChannelID())){
+                loadDatas();
+            }
         }
     };
 
@@ -97,8 +91,10 @@ public class MessageFragment extends Fragment implements onWsRequestListener {
     public void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
+        intentFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(mMessageReceiver, intentFilter);
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -317,7 +313,7 @@ public class MessageFragment extends Fragment implements onWsRequestListener {
                 Gson gson = new Gson();
                 Response res = gson.fromJson(json, Response.class);
                 if (res.getCode() == 200) {
-                    loadDatas();
+                    //loadDatas();
                 }
                 if (res.getCode() == 500) {
                     Toast.makeText(getActivity(), "Cannot send message", Toast.LENGTH_LONG).show();
@@ -350,7 +346,7 @@ public class MessageFragment extends Fragment implements onWsRequestListener {
     @Override
     public void onPause() {
         super.onPause();
-
+        getActivity().unregisterReceiver(mMessageReceiver);
     }
 
     @Override

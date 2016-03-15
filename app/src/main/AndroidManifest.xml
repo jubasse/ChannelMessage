@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="my.package.name.permission.C2D_MESSAGE" />
+    <uses-permission android:name="metral.julien.channelmessaging.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission
-        android:name="my.package.name.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
 
+    <permission
+        android:name="metral.julien.channelmessaging.permissions.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
     <application
         android:allowBackup="true"
@@ -35,8 +35,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/messageChannel"
             android:parentActivityName=".Activity.Channel.ChannelListFragmentActivity"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.Channel.ChannelListFragmentActivity"
             android:icon="@mipmap/ic_launcher"
@@ -45,13 +44,12 @@
         <activity
             android:name=".Activity.FriendsActivity"
             android:label="@string/friends"
-            android:parentActivityName=".Activity.Channel.ChannelListFragmentActivity"
-            />
+            android:parentActivityName=".Activity.Channel.ChannelListFragmentActivity" />
         <activity
             android:name=".Activity.Message.PrivateMessagesActivity"
             android:label="@string/title_activity_private_messages"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".Activity.FriendsActivity" />
+            android:parentActivityName=".Activity.FriendsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".Activity.Map.GPSActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -64,7 +62,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -72,7 +69,16 @@
         <activity
             android:name=".Activity.Map.MapActivity"
             android:label="@string/title_activity_map"
-            android:parentActivityName=".Activity.Message.MessageActivity"/>
+            android:parentActivityName=".Activity.Message.MessageActivity" />
+
+        <receiver
+            android:name=".Activity.Message.GCMBroadcastReceiver">
+            <intent-filter
+                android:priority="0">
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="metral.julien.channelmessaging.android" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

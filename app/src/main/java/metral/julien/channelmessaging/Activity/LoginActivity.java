@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.renderscript.Int3;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,8 +18,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import metral.julien.channelmessaging.Activity.Channel.ChannelListFragmentActivity;
+import metral.julien.channelmessaging.Activity.Message.MessageActivity;
+import metral.julien.channelmessaging.Model.Channel;
 import metral.julien.channelmessaging.Utils.ApiManager;
 import metral.julien.channelmessaging.Model.Response;
 import metral.julien.channelmessaging.Model.User;
@@ -33,6 +37,11 @@ public class LoginActivity extends NotificationActivity {
     private Button buttonValid;
     private String accessToken;
     private Response res;
+    private Channel channel = null;
+    private User user;
+    private Boolean isValidToken = false;
+    private SharedPreferences sharedPref;
+    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +49,39 @@ public class LoginActivity extends NotificationActivity {
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final User user = new User();
+        user = new User();
 
         Context context = LoginActivity.this;
-        final SharedPreferences sharedPref = context.getSharedPreferences(
-                "metral.julien.channelmessaging", Context.MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences("metral.julien.channelmessaging", Context.MODE_PRIVATE);
+
+        extras = getIntent().getExtras();
+        if(getIntent().getAction() == "redirectToChannel"){
+            channel = new Channel();
+            channel.setChannelID(Integer.valueOf(extras.getString("channelid")));
+        }
+
+        this.verifyAccessToken(new onWsRequestListener() {
+            @Override
+            public void onCompleted(String json) {
+                Gson gson = new Gson();
+                res = gson.fromJson(json, Response.class);
+
+                if (res.getCode() == 200) {
+                    Intent intent = new Intent(LoginActivity.this, ChannelListFragmentActivity.class);
+                    intent.putExtra("User", user);
+                    if (channel != null) {
+                        intent.putExtra("Channel", channel);
+                        intent.setAction("redirectToChannel");
+                    }
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
 
         identifiant = (EditText) findViewById(R.id.idTxt);
         password = (EditText) findViewById(R.id.mdpTxt);
@@ -54,7 +91,7 @@ public class LoginActivity extends NotificationActivity {
             @Override
             public void onClick(View v) {
 
-                String username = identifiant.getText().toString();
+                final String username = identifiant.getText().toString();
                 String pass = password.getText().toString();
 
                 user.setIdentifiant(username);
@@ -77,11 +114,19 @@ public class LoginActivity extends NotificationActivity {
 
                         Log.wtf("AccessToken:",res.getAccessToken());
                         accessToken = res.getAccessToken();
+                        sharedPref.edit().putString("accesstoken", accessToken).apply();
+                        sharedPref.edit().putString("username", username).apply();
                         user.setToken(res.getAccessToken());
-                        Toast.makeText(getApplicationContext(), res.getAccessToken(), Toast.LENGTH_LONG);
-                        Intent intent = new Intent(LoginActivity.this,ChannelListFragmentActivity.class);
-                        intent.putExtra("User",user);
-                        startActivity(intent);
+                        if(channel != null){
+                            Intent intent = new Intent(LoginActivity.this,MessageActivity.class);
+                            intent.putExtra("User",user);
+                            intent.putExtra("Channel",channel);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this,ChannelListFragmentActivity.class);
+                            intent.putExtra("User",user);
+                            startActivity(intent);
+                        }
                     }
 
                     @Override
@@ -92,6 +137,24 @@ public class LoginActivity extends NotificationActivity {
             }
         });
 
+    }
+
+    private void verifyAccessToken(onWsRequestListener listener) {
+        String username = sharedPref.getString("username",null);
+        String accesstoken = sharedPref.getString("accesstoken",null);
+        if(username != null && accesstoken != null){
+            user.setToken(accesstoken);
+            user.setIdentifiant(username);
+
+            HashMap<String, String> postDatas = new HashMap<>(1);
+
+            postDatas.put("accesstoken", user.getToken());
+
+            MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_VERIFY_TOKEN,postDatas);
+            task.execute();
+
+            task.setOnNewWsRequestListener(listener);
+        }
     }
 
     @Override
