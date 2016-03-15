@@ -28,17 +28,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "identifiant='" + identifiant + '\'' +
-                ", password='" + password + '\'' +
-                ", token='" + token + '\'' +
-                ", username='" + username + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
-
     public String getUsername() {
         return username;
     }
@@ -77,5 +66,16 @@ public class User implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "identifiant='" + identifiant + '\'' +
+                ", password='" + password + '\'' +
+                ", token='" + token + '\'' +
+                ", username='" + username + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

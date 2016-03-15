@@ -1,11 +1,9 @@
-package metral.julien.channelmessaging;
+package metral.julien.channelmessaging.Activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,24 +16,22 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import metral.julien.channelmessaging.Activity.Channel.ChannelListFragmentActivity;
+import metral.julien.channelmessaging.Utils.ApiManager;
 import metral.julien.channelmessaging.Model.Response;
 import metral.julien.channelmessaging.Model.User;
+import metral.julien.channelmessaging.R;
+import metral.julien.channelmessaging.Utils.MyAsyncTask;
+import metral.julien.channelmessaging.Utils.onWsRequestListener;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends NotificationActivity {
 
     private EditText identifiant;
     private EditText password;
     private Button buttonValid;
     private String accessToken;
-    private String username;
-    private String pass;
     private Response res;
 
     @Override
@@ -49,17 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         Context context = LoginActivity.this;
         final SharedPreferences sharedPref = context.getSharedPreferences(
                 "metral.julien.channelmessaging", Context.MODE_PRIVATE);
-
-//        if(sharedPref.contains("accessToken")){
-//
-//            accessToken = sharedPref.getString("accessToken",null);
-//            username = sharedPref.getString("username",null);
-//            pass = sharedPref.getString("pass",null);
-//
-//            user.setToken(accessToken);
-//            user.setIdentifiant(username);
-//            user.setPassword(pass);
-//        }
 
         identifiant = (EditText) findViewById(R.id.idTxt);
         password = (EditText) findViewById(R.id.mdpTxt);
@@ -79,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 postDatas.put("username", username);
                 postDatas.put("password", pass);
+                postDatas.put("registrationid",getRegistrationId());
 
                 MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_CONNECT,postDatas);
                 task.execute();
@@ -91,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         Log.wtf("AccessToken:",res.getAccessToken());
                         accessToken = res.getAccessToken();
-//                        sharedPref.edit().putString("accessToken",res.getAccessToken()).apply();
                         user.setToken(res.getAccessToken());
                         Toast.makeText(getApplicationContext(), res.getAccessToken(), Toast.LENGTH_LONG);
                         Intent intent = new Intent(LoginActivity.this,ChannelListFragmentActivity.class);

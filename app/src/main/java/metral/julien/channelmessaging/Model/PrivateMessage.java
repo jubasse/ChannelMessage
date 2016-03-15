@@ -86,4 +86,17 @@ public class PrivateMessage implements Serializable{
     public void setEverRead(Integer everRead) {
         this.everRead = everRead;
     }
+
+    @Override
+    public String toString() {
+        return "PrivateMessage{" +
+                "userID=" + userID +
+                ", sendByMe=" + sendByMe +
+                ", username='" + username + '\'' +
+                ", message='" + message + '\'' +
+                ", date='" + date + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", everRead=" + everRead +
+                '}';
+    }
 }

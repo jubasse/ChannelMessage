@@ -103,4 +103,19 @@ public class Message implements Serializable {
     public void setSoundUrl(String soundUrl) {
         this.soundUrl = soundUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", message='" + message + '\'' +
+                ", date='" + date + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", messageImageUrl='" + messageImageUrl + '\'' +
+                ", soundUrl='" + soundUrl + '\'' +
+                '}';
+    }
 }

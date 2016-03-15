@@ -1,4 +1,4 @@
-package metral.julien.channelmessaging;
+package metral.julien.channelmessaging.Activity.Map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -14,13 +14,15 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import metral.julien.channelmessaging.R;
+
 public class GPSActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleApiClient mGoogleApiClient;
-    private Location lastLocation;
-    private LocationRequest mLocationRequest;
     private Boolean isUpdating;
-    protected Location mCurrentLocation;
+    protected Location mLastLocation;
+    private double mLatitude = 0;
+    private double mLongitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +46,23 @@ public class GPSActivity extends AppCompatActivity implements GoogleApiClient.Co
                 return;
             }
             if(!isUpdating){
-                lastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
-
-                mLocationRequest = new LocationRequest();
-
+                LocationRequest mLocationRequest = new LocationRequest();
                 mLocationRequest.setInterval(10000);
+
                 mLocationRequest.setFastestInterval(5000);
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mGoogleApiClient, mLocationRequest, this);lastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
-
-                mLocationRequest = new LocationRequest();
-
-                mLocationRequest.setInterval(10000);
-                mLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
                 LocationServices.FusedLocationApi.requestLocationUpdates(
                         mGoogleApiClient, mLocationRequest, this);
+
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+                if (mLastLocation != null) {
+                    mLatitude = mLastLocation.getLatitude();
+                    mLongitude = mLastLocation.getLongitude();
+                }
+
                 isUpdating = true;
             }
         }
@@ -76,14 +74,22 @@ public class GPSActivity extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     @Override
+    protected void onStart() {
+        isUpdating = false;
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
+        isUpdating = false;
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
+        isUpdating = false;
         super.onStop();
     }
 
@@ -95,10 +101,16 @@ public class GPSActivity extends AppCompatActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         isUpdating = false;
-        mCurrentLocation = location;
+        mLastLocation = location;
+        mLongitude = location.getLongitude();
+        mLatitude = location.getLatitude();
     }
 
-    public Location getmCurrentLocation() {
-        return mCurrentLocation;
+    public double getLatitude() {
+        return mLatitude;
+    }
+
+    public double getLongitude() {
+        return mLongitude;
     }
 }

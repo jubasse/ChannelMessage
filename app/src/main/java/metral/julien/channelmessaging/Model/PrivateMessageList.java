@@ -24,4 +24,11 @@ public class PrivateMessageList implements Serializable {
     public void setMessages(List<PrivateMessage> messages) {
         this.messages = messages;
     }
+
+    @Override
+    public String toString() {
+        return "PrivateMessageList{" +
+                "messages=" + messages +
+                '}';
+    }
 }

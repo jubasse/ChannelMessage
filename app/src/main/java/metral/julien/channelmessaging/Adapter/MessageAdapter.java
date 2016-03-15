@@ -11,16 +11,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
-import metral.julien.channelmessaging.DownloadImageTask;
+import metral.julien.channelmessaging.Utils.DownloadImageTask;
 import metral.julien.channelmessaging.Model.Message;
 import metral.julien.channelmessaging.R;
-import metral.julien.channelmessaging.utils.ImageRounder;
+import metral.julien.channelmessaging.Utils.ImageRounder;
 
 /**
  * Created by Julien on 08/02/2016.
@@ -51,23 +53,28 @@ public class MessageAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void addItem(Message message)
-    {
-        list.add(message);
-        notifyDataSetChanged();
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.message_layout,parent,false);
+        View view;
+        String messageUrl = list.get(position).getMessageImageUrl();
+        if(messageUrl != "" && messageUrl != null){
+            view = inflater.inflate(R.layout.message_image_layout,parent,false);
+        } else {
+            view = inflater.inflate(R.layout.message_layout,parent,false);
+        }
 
-        TextView message = (TextView) view.findViewById(R.id.message);
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView username = (TextView) view.findViewById(R.id.username);
         ImageView messageImage = (ImageView) view.findViewById(R.id.messageImage);
+        if(messageUrl != "" && messageUrl != null){
+            ImageView messagingImage = (ImageView) view.findViewById(R.id.messagingImage);
+            Picasso.with(context).load(messageUrl).into(messagingImage);
+        } else {
+            TextView message = (TextView) view.findViewById(R.id.message);
+            message.setText(list.get(position).getMessage());
+        }
 
-        message.setText(list.get(position).getMessage());
         date.setText(list.get(position).getDate());
         username.setText(list.get(position).getUsername());
 
@@ -89,8 +96,6 @@ public class MessageAdapter extends BaseAdapter {
                 ).execute();
             }
         }
-
-
         return view;
     }
 
@@ -104,10 +109,5 @@ public class MessageAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         return b;
-    }
-
-    public void removeAll() {
-        list.clear();
-        notifyDataSetChanged();
     }
 }

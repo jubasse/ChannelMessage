@@ -16,10 +16,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import metral.julien.channelmessaging.DownloadImageTask;
+import metral.julien.channelmessaging.Utils.DownloadImageTask;
 import metral.julien.channelmessaging.Model.User;
 import metral.julien.channelmessaging.R;
-import metral.julien.channelmessaging.utils.ImageRounder;
+import metral.julien.channelmessaging.Utils.ImageRounder;
 
 /**
  * Created by Julien on 01/03/2016.
@@ -49,11 +49,6 @@ public class FriendAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void addItem(User friend)
-    {
-        friendList.add(friend);
-        notifyDataSetChanged();
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -66,7 +61,7 @@ public class FriendAdapter extends BaseAdapter {
 
 
         if(friendList.get(position).getImageUrl() != null){
-            String fileName = friendList.get(position).getIdentifiant().toString();
+            String fileName = friendList.get(position).getIdentifiant();
             ContextWrapper cw = new ContextWrapper(context);
             File directory = cw.getDir("ChannelMessaging", Context.MODE_PRIVATE);
 
@@ -76,7 +71,7 @@ public class FriendAdapter extends BaseAdapter {
                 friendImage.setImageBitmap(rounded);
             } else {
                 new DownloadImageTask(
-                        friendList.get(position).getIdentifiant().toString(),
+                        friendList.get(position).getIdentifiant(),
                         friendList.get(position).getImageUrl(),
                         friendImage,
                         this.context

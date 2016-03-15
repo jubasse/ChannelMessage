@@ -45,4 +45,13 @@ public class Channel implements Serializable {
     public void setConnectedUsers(Integer connectedUsers) {
         this.connectedUsers = connectedUsers;
     }
+
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "channelID=" + channelID +
+                ", name='" + name + '\'' +
+                ", connectedUsers=" + connectedUsers +
+                '}';
+    }
 }

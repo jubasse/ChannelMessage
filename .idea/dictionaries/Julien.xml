@@ -2,13 +2,28 @@
   <dictionary name="Julien">
     <words>
       <w>accesstoken</w>
+      <w>ajouter</w>
+      <w>ajouté</w>
+      <w>amis</w>
       <w>channelid</w>
+      <w>d'un</w>
       <w>datas</w>
+      <w>fermer</w>
       <w>getchannels</w>
       <w>getmessages</w>
+      <w>géoloc</w>
+      <w>identifiant</w>
+      <w>l'ajout</w>
+      <w>registrationid</w>
       <w>sendbyme</w>
       <w>sendmessage</w>
       <w>userid</w>
+      <w>utilisateur</w>
+      <w>voir</w>
+      <w>voulez</w>
+      <w>vous</w>
+      <w>vraiment</w>
+      <w>échoué</w>
     </words>
   </dictionary>
 </component>

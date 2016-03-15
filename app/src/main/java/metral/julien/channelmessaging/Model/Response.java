@@ -49,4 +49,12 @@ public class Response implements Serializable {
         this.accessToken = accessToken;
     }
 
+    @Override
+    public String toString() {
+        return "Response{" +
+                "response='" + response + '\'' +
+                ", code=" + code +
+                ", accessToken='" + accessToken + '\'' +
+                '}';
+    }
 }

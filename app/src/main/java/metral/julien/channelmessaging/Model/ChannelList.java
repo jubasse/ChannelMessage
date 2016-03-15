@@ -23,4 +23,11 @@ public class ChannelList {
     public void setChannels(List<Channel> channels) {
         this.channels = channels;
     }
+
+    @Override
+    public String toString() {
+        return "ChannelList{" +
+                "channels=" + channels +
+                '}';
+    }
 }

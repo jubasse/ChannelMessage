@@ -7,11 +7,22 @@
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
-        tools:context="metral.julien.channelmessaging.MessageActivity"
+        tools:context=".Activity.Message.MessageActivity"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal">
+
+            <com.victor.loading.book.BookLoading
+                android:id="@+id/bookloading"
+                android:layout_width="160dp"
+                android:layout_height="160dp"/>
+        </RelativeLayout>
 
         <TextView
             tools:text="New Text"
@@ -38,20 +49,17 @@
             android:layout_alignParentStart="true"
             android:weightSum="1" >
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="70dp"
-                android:text="New Text"
-                android:id="@+id/inputMessage"
-                android:layout_weight="1.00"
-                android:paddingLeft="10dp"
-                android:paddingTop="25dp" />
-
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="1" >
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="photo"
+                    android:id="@+id/photoButton" />
 
                 <EditText
                     android:layout_width="0dp"
@@ -70,5 +78,6 @@
                     android:theme="@style/AppTheme.AppBarOverlay" />
             </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
 </FrameLayout>

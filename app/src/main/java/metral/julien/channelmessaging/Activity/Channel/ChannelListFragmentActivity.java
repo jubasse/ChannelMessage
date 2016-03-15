@@ -1,19 +1,20 @@
-package metral.julien.channelmessaging;
+package metral.julien.channelmessaging.Activity.Channel;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 
+import com.victor.loading.newton.NewtonCradleLoading;
+
+import metral.julien.channelmessaging.Activity.Map.GPSActivity;
+import metral.julien.channelmessaging.Activity.Message.MessageActivity;
 import metral.julien.channelmessaging.Fragment.ChannelListFragment;
 import metral.julien.channelmessaging.Fragment.MessageFragment;
 import metral.julien.channelmessaging.Model.Channel;
 import metral.julien.channelmessaging.Model.User;
+import metral.julien.channelmessaging.R;
 
 
 public class ChannelListFragmentActivity extends GPSActivity {
@@ -37,27 +38,16 @@ public class ChannelListFragmentActivity extends GPSActivity {
     public AdapterView.OnItemClickListener OnItemChannelClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Channel channel = channelListFragment.getAdapter().getItem(position);
             if(messageFragment != null && messageFragment.isInLayout()){
-                Channel channel = channelListFragment.getAdapter().getItem(position);
                 messageFragment.setUserAndChannel(user,channel);
             } else {
-                Channel channel = channelListFragment.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
                 intent.putExtra("Channel", channel);
                 intent.putExtra("User", user);
                 startActivity(intent);
             }
-
         }
     };
-
-    public View.OnClickListener OnSendButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-        }
-    };
-
-
 
 }

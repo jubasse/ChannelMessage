@@ -1,30 +1,26 @@
-package metral.julien.channelmessaging;
+package metral.julien.channelmessaging.Activity.Message;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import metral.julien.channelmessaging.Adapter.PrivateMessageAdapter;
-import metral.julien.channelmessaging.Model.MessageList;
+import metral.julien.channelmessaging.Utils.ApiManager;
 import metral.julien.channelmessaging.Model.PrivateMessageList;
 import metral.julien.channelmessaging.Model.User;
+import metral.julien.channelmessaging.R;
+import metral.julien.channelmessaging.Utils.MyAsyncTask;
+import metral.julien.channelmessaging.Utils.onWsRequestListener;
 
 public class PrivateMessagesActivity extends AppCompatActivity implements onWsRequestListener {
 
@@ -51,7 +47,7 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
             public void onClick(View view) {
                 HashMap<String, String> postDatas = new HashMap<>(2);
                 postDatas.put("accesstoken", user.getToken());
-                postDatas.put("userid", friend.getIdentifiant().toString());
+                postDatas.put("userid", friend.getIdentifiant());
                 postDatas.put("message", privateMessage.getText().toString());
                 MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_SEND_MESSAGES_TO_FRIENDS,postDatas);
                 task.setOnNewWsRequestListener(new onWsRequestListener() {
@@ -75,6 +71,10 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
             friend = (User) getIntent().getSerializableExtra("Friend");
         }
 
+        if(handler != null && r != null){
+            handler.removeCallbacks(r);
+        }
+
         handler = new Handler();
 
         r = new Runnable() {
@@ -88,10 +88,21 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
 
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            if(handler != null && r != null){
+                handler.removeCallbacks(r);
+            }
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void loadDatas() {
         HashMap<String, String> postDatas = new HashMap<>(1);
         postDatas.put("accesstoken", user.getToken());
-        postDatas.put("userid", friend.getIdentifiant().toString());
+        postDatas.put("userid", friend.getIdentifiant());
         MyAsyncTask task = new MyAsyncTask(ApiManager.BASE_URL_GET_MESSAGES_FROM_FRIENDS,postDatas);
 
         task.setOnNewWsRequestListener(this);
@@ -102,7 +113,7 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
     @Override
     public void onCompleted(String response) {
         Gson gson = new Gson();
-        Log.wtf("JsonMessages", response.toString());
+        Log.wtf("JsonMessages", response);
 
         try{
             messages = gson.fromJson(response,PrivateMessageList.class);
@@ -118,7 +129,33 @@ public class PrivateMessagesActivity extends AppCompatActivity implements onWsRe
     }
 
     @Override
-    public void onError(String error) {
+    public void onDestroy() {
+        super.onDestroy();
+        if(r != null && handler != null){
+            handler.removeCallbacks(r);
+        }
+    }
 
+    @Override
+    public void onError(String error) {
+        if(r != null && handler != null){
+            handler.removeCallbacks(r);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(r != null && handler != null){
+            handler.removeCallbacks(r);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(r != null && handler != null){
+            handler.removeCallbacks(r);
+        }
     }
 }

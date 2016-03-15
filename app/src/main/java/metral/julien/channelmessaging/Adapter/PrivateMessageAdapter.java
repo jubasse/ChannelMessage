@@ -18,11 +18,11 @@ import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
-import metral.julien.channelmessaging.DownloadImageTask;
+import metral.julien.channelmessaging.Utils.DownloadImageTask;
 import metral.julien.channelmessaging.Model.PrivateMessage;
 import metral.julien.channelmessaging.Model.User;
 import metral.julien.channelmessaging.R;
-import metral.julien.channelmessaging.utils.ImageRounder;
+import metral.julien.channelmessaging.Utils.ImageRounder;
 
 /**
  * Created by Julien on 01/03/2016.
@@ -53,12 +53,6 @@ public class PrivateMessageAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return 0;
-    }
-
-    public void addItem(PrivateMessage message)
-    {
-        messageList.add(message);
-        notifyDataSetChanged();
     }
 
     @Override

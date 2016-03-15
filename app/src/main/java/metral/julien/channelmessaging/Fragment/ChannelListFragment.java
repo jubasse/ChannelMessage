@@ -11,22 +11,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.victor.loading.newton.NewtonCradleLoading;
+
 import java.util.HashMap;
 
 import metral.julien.channelmessaging.Adapter.ChannelAdapter;
-import metral.julien.channelmessaging.ApiManager;
-import metral.julien.channelmessaging.ChannelListFragmentActivity;
-import metral.julien.channelmessaging.FriendsActivity;
+import metral.julien.channelmessaging.Utils.ApiManager;
+import metral.julien.channelmessaging.Activity.Channel.ChannelListFragmentActivity;
+import metral.julien.channelmessaging.Activity.FriendsActivity;
 import metral.julien.channelmessaging.Model.ChannelList;
 import metral.julien.channelmessaging.Model.User;
-import metral.julien.channelmessaging.MyAsyncTask;
+import metral.julien.channelmessaging.Utils.MyAsyncTask;
 import metral.julien.channelmessaging.R;
-import metral.julien.channelmessaging.onWsRequestListener;
+import metral.julien.channelmessaging.Utils.onWsRequestListener;
 
 public class ChannelListFragment extends Fragment {
 
@@ -49,6 +50,14 @@ public class ChannelListFragment extends Fragment {
     public void setUser(User user) {
         this.user = user;
         fillChannelList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(user != null){
+            fillChannelList();
+        }
     }
 
     @Override
@@ -96,7 +105,7 @@ public class ChannelListFragment extends Fragment {
             @Override
             public void onCompleted(String json) {
                 Gson gson = new Gson();
-                Log.wtf("JsonChannels", json.toString());
+                Log.wtf("JsonChannels", json);
                 try {
                     channels = gson.fromJson(json, ChannelList.class);
                 } catch (Exception e) {
@@ -105,7 +114,9 @@ public class ChannelListFragment extends Fragment {
                 adapter = new ChannelAdapter(channels.getChannels(), getActivity());
                 channelListView.setAdapter(adapter);
                 ChannelListFragmentActivity activity = (ChannelListFragmentActivity) getActivity();
-                channelListView.setOnItemClickListener(activity.OnItemChannelClickListener);
+                if(activity != null){
+                    channelListView.setOnItemClickListener(activity.OnItemChannelClickListener);
+                }
                 Log.wtf("ObjectChannels", channels.getChannels().get(1).getName());
             }
 
