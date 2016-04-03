@@ -1,21 +1,15 @@
 package metral.julien.channelmessaging.Activity.Message;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,9 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
-import metral.julien.channelmessaging.Activity.LoginActivity;
 import metral.julien.channelmessaging.Activity.Map.GPSActivity;
 import metral.julien.channelmessaging.Activity.Map.MapActivity;
 import metral.julien.channelmessaging.Adapter.MessageAdapter;

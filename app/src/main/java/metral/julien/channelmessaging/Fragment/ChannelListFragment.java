@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.victor.loading.newton.NewtonCradleLoading;
 
 import java.util.HashMap;
 

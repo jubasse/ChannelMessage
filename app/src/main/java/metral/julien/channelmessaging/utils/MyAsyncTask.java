@@ -3,8 +3,6 @@ package metral.julien.channelmessaging.Utils;
 
 import android.os.AsyncTask;
 
-import com.google.android.gms.common.api.Api;
-
 import java.util.HashMap;
 
 public class MyAsyncTask extends AsyncTask<String, Integer, String> {
